@@ -61,8 +61,8 @@ const slideRight = column => {
 	return [...emptys, ...numbers]
 }
 
-const combine = column => {
-	for (let i = 0; i < size; i++) {
+const combineLeft = column => {
+	for (let i = 0; i < size - 1; i++) {
 		const a = column[i];
 		const b = column[i + 1];
 		if (a === b && a) {
@@ -74,10 +74,31 @@ const combine = column => {
 	return column;
 }
 
-const operate = (column, dir) => {
-	column = dir ? slideLeft(column) : slideRight(column);
-	column = combine(column);
-	column = dir ? slideLeft(column) : slideRight(column);
+const combineRight = column => {
+	for (let i = size - 1; i > 0; i--) {
+		const a = column[i];
+		const b = column[i - 1];
+		if (a === b && a) {
+			column[i] = a + b;
+			column[i - 1] = null;
+		}
+	}
+	
+	return column;
+}
+
+const operateLeft = column => {
+	column = slideLeft(column);
+	column = combineLeft(column);
+	column = slideLeft(column);
+	
+	return column;
+}
+
+const operateRight = column => {
+	column = slideRight(column);
+	column = combineRight(column);
+	column = slideRight(column);
 	
 	return column;
 }
@@ -96,10 +117,10 @@ const compare = (a, b) => {
 
 const rotate = () => {
 	const tmp = [
-		[0, 0, 0, 0],
-		[0, 0, 0, 0],
-		[0, 0, 0, 0],
-		[0, 0, 0, 0]
+		[],
+		[],
+		[],
+		[]
 	]
 	for (let i = 0; i < size; i++) {
 		for (let j = 0; j < size; j++) {
@@ -116,7 +137,7 @@ const onKey = evt => {
 		case 37:
 			past = grid.slice();
 			for (let i = 0; i < size; i++) {
-				grid[i] = operate(grid[i], 1);
+				grid[i] = operateLeft(grid[i]);
 			}
 			
 			if (compare(grid, past)) {
@@ -128,7 +149,7 @@ const onKey = evt => {
 			past = grid.slice();
 			grid = rotate();
 			for (let i = 0; i < size; i++) {
-				grid[i] = operate(grid[i], 1);
+				grid[i] = operateLeft(grid[i]);
 			}
 			grid = rotate();
 
@@ -140,7 +161,7 @@ const onKey = evt => {
 		case 39:
 			past = grid.slice();
 			for (let i = 0; i < size; i++) {
-				grid[i] = operate(grid[i], 0);
+				grid[i] = operateRight(grid[i]);
 			}
 			
 			if (compare(grid, past)) {
@@ -152,7 +173,7 @@ const onKey = evt => {
 			past = grid.slice();
 			grid = rotate();
 			for (let i = 0; i < size; i++) {
-				grid[i] = operate(grid[i], 0);
+				grid[i] = operateRight(grid[i]);
 			}
 			grid = rotate();
 

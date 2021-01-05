@@ -1,7 +1,10 @@
 'use strict';
 
 const size = 4;
-const $game = document.getElementById('game')
+const $game = document.getElementById('game');
+
+let score = 0;
+const $score = document.getElementById('score');
 
 const getRandomNumber = (max, min = 0) => Math.floor(Math.random() * (max - min) + min);
 
@@ -30,10 +33,14 @@ const update = () => {
 }
 
 const setup = () => {
+	$game.innerHTML = '';
+	grid = [];
 	for (let i = 0; i < size; i++) {
 		const tmp = []
 		for (let j = 0; j < size; j++) {
 			tmp.push(null);
+			const li = document.createElement('li');
+			$game.append(li);
 		}
 	
 		grid.push(tmp);
@@ -46,6 +53,13 @@ const setup = () => {
 }
 
 setup();
+
+const $start = document.getElementById('start');
+$start.addEventListener('click', () => {
+	setup();
+	$score.textContent = 0;
+	score = 0;
+})
 
 const slideLeft = column => {
 	const numbers = column.filter(cell => cell);
@@ -67,6 +81,7 @@ const combineLeft = column => {
 		const b = column[i + 1];
 		if (a === b && a) {
 			column[i] = a + b;
+			score += column[i];
 			column[i + 1] = null;
 		}
 	}
@@ -80,6 +95,7 @@ const combineRight = column => {
 		const b = column[i - 1];
 		if (a === b && a) {
 			column[i] = a + b;
+			score += column[i];
 			column[i - 1] = null;
 		}
 	}
@@ -91,6 +107,7 @@ const operateLeft = column => {
 	column = slideLeft(column);
 	column = combineLeft(column);
 	column = slideLeft(column);
+	$score.textContent = score;
 	
 	return column;
 }
@@ -99,6 +116,7 @@ const operateRight = column => {
 	column = slideRight(column);
 	column = combineRight(column);
 	column = slideRight(column);
+	$score.textContent = score;
 	
 	return column;
 }

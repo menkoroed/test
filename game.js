@@ -34,6 +34,7 @@ const update = () => {
 
 const setup = () => {
 	$game.innerHTML = '';
+	$game.className = '';
 	grid = [];
 	for (let i = 0; i < size; i++) {
 		const tmp = []
@@ -149,6 +150,18 @@ const rotate = () => {
 	return tmp;
 }
 
+const gameOver = () => {
+	for (let i = 0; i < size; i++) {
+		for (let j = 0; j < size; j++) {
+			if (!grid[i][j]) return false;
+			if (i !== 3 && grid[i][j] === grid[i + 1][j]) return false;
+			if (j !== 3 && grid[i][j] === grid[i][j + 1]) return false;
+		}
+	}
+
+	return true;
+}
+
 const onKey = evt => {
 	let past;
 	switch (evt.keyCode) {
@@ -161,6 +174,10 @@ const onKey = evt => {
 			if (compare(grid, past)) {
 				addNumber();
 				update();
+			} else {
+				if (gameOver()) {
+					$game.classList.add('gameover');
+				}
 			}
 			break;
 		case 38:
@@ -174,6 +191,10 @@ const onKey = evt => {
 			if (compare(grid, past)) {
 				addNumber();
 				update();
+			} else {
+				if (gameOver()) {
+					$game.classList.add('gameover');
+				}
 			}
 			break;
 		case 39:
@@ -185,6 +206,10 @@ const onKey = evt => {
 			if (compare(grid, past)) {
 				addNumber();
 				update();
+			} else {
+				if (gameOver()) {
+					$game.classList.add('gameover');
+				}
 			}
 			break;
 		case 40:
@@ -198,6 +223,10 @@ const onKey = evt => {
 			if (compare(grid, past)) {
 				addNumber();
 				update();
+			} else {
+				if (gameOver()) {
+					$game.classList.add('gameover');
+				}
 			}
 			break;
 	}
